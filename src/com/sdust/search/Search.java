@@ -9,7 +9,6 @@ import java.util.UUID;
 import java.util.Vector;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
@@ -37,7 +36,14 @@ public class Search {
 		this.itemNum = itemNum;
 	}
 
-	
+	public Vector<String> getContentList() {
+		return contentList;
+	}
+
+	public void setContentList(Vector<String> contentList) {
+		this.contentList = contentList;
+	}
+
 	public int getItemNum() {
 		return itemNum;
 	}
@@ -159,14 +165,15 @@ public class Search {
 				e.printStackTrace();
 			}
 		}
+		//保证4秒内一定要退出
 		Runnable runnable = new Runnable() {  
             public void run() {  
-            	System.out.println("执行完了");
-            	for(String s : contentList){
-            		saveArticle(s);
-            	}
             	exes.shutdownNow();
-            }  
+            	System.out.println("执行完了");
+            	/*for(String s : contentList){
+            		saveArticle(s);
+            	}*/
+            }
         };
 		exes.schedule(runnable, 4, TimeUnit.SECONDS); 
 	}
@@ -199,8 +206,11 @@ public class Search {
 
 	}
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException, InterruptedException {
 		Search test = new Search("味精有什么好处");
+		System.out.println("第一次"+test.getContentList().size());
 		test.start();
+		TimeUnit.MILLISECONDS.sleep(5000);
+		System.out.println("第二次"+test.getContentList().size());
 	}
 }
