@@ -42,7 +42,6 @@ public class MaximumSelect implements Select {
 						count = count + appearNumber(sb.toString(), word);
 					}
 					a[i] = count;
-					System.out.println(a[i]);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

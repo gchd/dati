@@ -2,6 +2,8 @@ package com.sdust.main;
 
 import java.util.concurrent.TimeUnit;
 
+import org.jsoup.helper.StringUtil;
+
 import com.sdust.entity.Question;
 import com.sdust.parser.QuestionParser;
 import com.sdust.search.Search;
@@ -37,7 +39,14 @@ public class DatiMain {
 	public void start(){
 		System.out.println("开始执行");
 		//解析图片得到题目
-		Question question = questionParser.getQuestion();
+		Question question = null;
+		try {
+			question = questionParser.getQuestion();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		System.out.println("开始搜索题目");
 		//搜索题目，得到题干搜索的前n条文章（4秒钟之后开始选择选项）
 		Search baiduSearch = new Search(question.getQuestion(),10);
@@ -50,9 +59,11 @@ public class DatiMain {
 		}
 		
 		question = select.select(question, baiduSearch.getContentList());
-		System.out.println("答案是：" + question.getAnswer());
+		System.out.println("答案是：" + (char)(question.getAnswer()+65));
 		//统计选项在文本中出现次数，并选择
 		
 //		System.out.println("第二次"+baiduSearch.getContentList().size());
 	}
+	
+	
 }
