@@ -11,7 +11,7 @@ public class TestCutWords {
 	@Test
 	public void test() throws IOException {
 		HashSet<String> set = new HashSet<>();
-		String data = CutWords.cutWords("测量人体体温的部位中，最接近人实际体温的是","|");
+		String data = CutWords.cutWords("谷氨酸钠","|");
 		System.out.println(data);
 	}
 }

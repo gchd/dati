@@ -40,4 +40,11 @@ public class Question {
 	public void setAnswer(int answer) {
 		this.answer = answer;
 	}
+
+	@Override
+	public String toString() {
+		return "Question [question=" + question + ", optionCount="
+				+ optionCount + ", option=" + option + ", answer=" + answer
+				+ "]";
+	}
 }

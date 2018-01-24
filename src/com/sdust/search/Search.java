@@ -80,12 +80,12 @@ public class Search {
 			e.printStackTrace();
 		}
 		Elements elements = doc.getElementsByClass("result");
-		System.out.println(elements.size());
+//		System.out.println(elements.size());
 		for (Element element : elements) {
 			String url = element.getElementsByClass("t").get(0)
 					.getElementsByTag("a").get(0).attr("href");
 			urlList.add(url);
-			System.out.println(url);
+//			System.out.println(url);
 		}
 		return urlList;
 	}
@@ -157,8 +157,8 @@ public class Search {
 		// 执行多线程任务
 		for (Future<Boolean> future : setThreads) {
 			try {
-				Boolean flagSucc = future.get();
-				System.out.println(flagSucc);
+				future.get();
+//				System.out.println(flagSucc);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			} catch (ExecutionException e) {
@@ -169,13 +169,13 @@ public class Search {
 		Runnable runnable = new Runnable() {  
             public void run() {  
             	exes.shutdownNow();
-            	System.out.println("执行完了");
+            	System.out.println("搜索完毕，下一步进行选择");
             	/*for(String s : contentList){
             		saveArticle(s);
             	}*/
             }
         };
-		exes.schedule(runnable, 4, TimeUnit.SECONDS); 
+		exes.schedule(runnable, 3500, TimeUnit.MILLISECONDS); 
 	}
 
 	/**
