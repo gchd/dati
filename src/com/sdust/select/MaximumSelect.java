@@ -33,8 +33,8 @@ public class MaximumSelect implements Select {
 		int a[] = new int[question.getOptionCount()];
 		for (int i = 0; i < question.getOption().size(); i++) {
 			String option = question.getOption().get(i);
-			if (option.length() > 3) {
-				// 答案超过3各字分词统计
+			if (option.length() >= 6) {
+				// 答案超过6各字分词统计
 				try {
 					int count = 0;
 					List<String> cutWords = CutWords.cutWords(option);

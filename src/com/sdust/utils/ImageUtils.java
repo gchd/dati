@@ -21,6 +21,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import com.sdust.entity.Point;
+import com.sdust.entity.RGBValue;
 
 public class ImageUtils {
 
@@ -31,15 +32,14 @@ public class ImageUtils {
 	public static String IMAGE_TYPE_PNG = "png";// 可移植网络图形
 	public static String IMAGE_TYPE_PSD = "psd";// Photoshop的专用格式Photoshop
 
-	public static void main(String[] args) {
-
-		Point point = new Point();
-		// 切割图像：
-		// 按指定起点坐标和宽高切割
-		ImageUtils.cut("e:/abc.jpg", "e:/abc_cut.jpg",point , 400, 400);// 测试OK
-
+	/**
+	 * 获取指定坐标的RGB值
+	 */
+	public static RGBValue getRGBByPoint(BufferedImage bufferedImage, int x, int y) {
+		int pixel = bufferedImage.getRGB(x, y);
+		return  new RGBValue((pixel & 0xff0000) >> 16,(pixel & 0xff00) >> 8,(pixel & 0xff));
 	}
-
+	
 	/**
 	 * 图片切割
 	 * @param srcImageFile
@@ -49,18 +49,18 @@ public class ImageUtils {
 	 * @param width
 	 * @param height
 	 */
-	public final static boolean cut(String srcImageFile, String savePath, Point point, int width, int height) {
+	public final static boolean cut(String srcImageFile, String savePath, int x, int y, int width, int height) {
 		try {
 			BufferedImage bi = ImageIO.read(new File(srcImageFile));
-			int srcWidth = bi.getHeight(); // 源图宽度
-			int srcHeight = bi.getWidth(); // 源图高度
+			int srcHeight = bi.getHeight(); // 源图宽度
+			int srcWidth = bi.getWidth(); // 源图高度
 			
-			if(point.getPointX()+width > srcWidth || point.getPointY()+height>srcHeight){
+			if(x+width > srcWidth || y+height>srcHeight){
 				return false;
 			}
 			if (srcWidth > 0 && srcHeight > 0) {
 				Image image = bi.getScaledInstance(srcWidth, srcHeight,Image.SCALE_DEFAULT);
-				ImageFilter cropFilter = new CropImageFilter(point.getPointX(), point.getPointY(), width,height);
+				ImageFilter cropFilter = new CropImageFilter(x, y, width,height);
 				Image img = Toolkit.getDefaultToolkit().createImage(
 						new FilteredImageSource(image.getSource(), cropFilter));
 				BufferedImage tag = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
@@ -77,10 +77,6 @@ public class ImageUtils {
 			return false;
 		}
 		return true;
-	}
-
-	public static void recognizeWords(String string) {
-		
 	}
 
 }

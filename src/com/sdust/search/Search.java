@@ -9,6 +9,7 @@ import java.util.UUID;
 import java.util.Vector;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
@@ -75,7 +76,7 @@ public class Search {
 		Document doc = null;
 		try {
 			doc = Jsoup.connect(urlString).userAgent("Mozilla/5.0")
-					.timeout(3000).get();
+					.timeout(2000).get();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -100,7 +101,7 @@ public class Search {
 		Document doc = null;
 		try {
 			doc = Jsoup.connect(urlString).userAgent("Mozilla/5.0")
-					.timeout(3000).get();
+					.timeout(2000).get();
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
 			return "";
@@ -136,17 +137,17 @@ public class Search {
 		}
 	}
 
-	public void start() {
-		 
+	
+	public List<String> getArt() {
 		// 创建一个定长的线程池
-		final ScheduledExecutorService exes = Executors.newScheduledThreadPool(5);
+		final ExecutorService exes = Executors.newFixedThreadPool(10);
 		Set<Future<Boolean>> setThreads = new java.util.HashSet<Future<Boolean>>();
 		List<String> urls = null;
 		try {
 			urls = getUrls(keyWord, itemNum);
 		} catch (IOException e1) {
 			System.out.println(e1.getMessage());
-			return;
+			return null;
 		}
 		for (String links : urls) {
 			// 创建线程任务
@@ -165,17 +166,7 @@ public class Search {
 				e.printStackTrace();
 			}
 		}
-		//保证4秒内一定要退出
-		Runnable runnable = new Runnable() {  
-            public void run() {  
-            	exes.shutdownNow();
-            	System.out.println("搜索完毕，下一步进行选择");
-            	/*for(String s : contentList){
-            		saveArticle(s);
-            	}*/
-            }
-        };
-		exes.schedule(runnable, 3500, TimeUnit.MILLISECONDS); 
+		return contentList;
 	}
 
 	/**
@@ -206,11 +197,4 @@ public class Search {
 
 	}
 
-	public static void main(String[] args) throws IOException, InterruptedException {
-		Search test = new Search("味精有什么好处");
-		System.out.println("第一次"+test.getContentList().size());
-		test.start();
-		TimeUnit.MILLISECONDS.sleep(5000);
-		System.out.println("第二次"+test.getContentList().size());
-	}
 }
